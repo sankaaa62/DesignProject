@@ -141,16 +141,37 @@ function renderRooms() {
   for (const w of apartment.windows ?? []) renderOpening(w, '#378add', g);
 }
 
+function wallGap(r, o) {
+  const horizontal = o.side === 'top' || o.side === 'bottom';
+  const a0 = horizontal ? r.x + o.offset : r.y + o.offset;
+  const a1 = a0 + o.width;
+  let gap = WALL;
+  for (const n of apartment.rooms) {
+    if (n.id === r.id) continue;
+    if (horizontal) {
+      if (n.x + n.w < a0 || n.x > a1) continue;
+      const d = o.side === 'top' ? r.y - (n.y + n.h) : n.y - (r.y + r.h);
+      if (d >= 0 && d < gap) gap = d;
+    } else {
+      if (n.y + n.h < a0 || n.y > a1) continue;
+      const d = o.side === 'left' ? r.x - (n.x + n.w) : n.x - (r.x + r.w);
+      if (d >= 0 && d < gap) gap = d;
+    }
+  }
+  return gap;
+}
+
 function renderOpening(o, color, g) {
   const r = apartment.rooms.find(rm => rm.id === o.room);
   if (!r) return;
+  const t = wallGap(r, o);
+  const pad = 30;
   let x, y, w, h;
-  const t = 90;
-  if (o.side === 'top')    { x = r.x + o.offset; y = r.y - t;       w = o.width; h = t * 2; }
-  if (o.side === 'bottom') { x = r.x + o.offset; y = r.y + r.h - t; w = o.width; h = t * 2; }
-  if (o.side === 'left')   { x = r.x - t;        y = r.y + o.offset; w = t * 2;  h = o.width; }
-  if (o.side === 'right')  { x = r.x + r.w - t;  y = r.y + o.offset; w = t * 2;  h = o.width; }
-  el('rect', { x, y, width: w, height: h, fill: color, opacity: 0.85 }, g);
+  if (o.side === 'top')    { x = r.x + o.offset; y = r.y - t - pad;       w = o.width; h = t + pad * 2; }
+  if (o.side === 'bottom') { x = r.x + o.offset; y = r.y + r.h - pad;     w = o.width; h = t + pad * 2; }
+  if (o.side === 'left')   { x = r.x - t - pad;  y = r.y + o.offset;      w = t + pad * 2; h = o.width; }
+  if (o.side === 'right')  { x = r.x + r.w - pad; y = r.y + o.offset;     w = t + pad * 2; h = o.width; }
+  el('rect', { x, y, width: w, height: h, fill: color, opacity: 0.9 }, g);
 }
 
 function renderFurniture() {
