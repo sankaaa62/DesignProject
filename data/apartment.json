@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "units": "mm",
+    "source": "Выписка из технического плана, кв. 104",
+    "note": "Габариты комнат точные; взаимное расположение и проёмы приблизительные — уточнить обмерами"
+  },
+  "rooms": [
+    { "id": "detskaya",   "name": "Детская",        "area": 12.8, "x": 0,    "y": 0,     "w": 4010, "h": 3180 },
+    { "id": "spalnya",    "name": "Спальня",        "area": 14.4, "x": 4090, "y": 40,    "w": 4590, "h": 3140 },
+    { "id": "kuhnya",     "name": "Кухня-гостиная", "area": 20.9, "x": 8760, "y": 0,     "w": 3620, "h": 6030 },
+    { "id": "koridor",    "name": "Коридор",        "area": 5.2,  "x": 1500, "y": 3260,  "w": 4690, "h": 1110 },
+    { "id": "vannaya",    "name": "Ванная",         "area": 4.1,  "x": 1500, "y": 4450,  "w": 2320, "h": 1760 },
+    { "id": "tualet",     "name": "Туалет",         "area": 2.5,  "x": 3900, "y": 4450,  "w": 1360, "h": 1840 },
+    { "id": "prihozhaya", "name": "Прихожая",       "area": 4.2,  "x": 5340, "y": 4450,  "w": 2230, "h": 1920 },
+    { "id": "lodzhiya",   "name": "Лоджия",         "area": 3.2,  "x": 9060, "y": -1150, "w": 3000, "h": 1070, "cold": true }
+  ],
+  "doors": [
+    { "room": "prihozhaya", "side": "bottom", "offset": 800, "width": 900, "entry": true },
+    { "room": "detskaya",   "side": "bottom", "offset": 3100, "width": 800 },
+    { "room": "spalnya",    "side": "bottom", "offset": 400,  "width": 800 },
+    { "room": "vannaya",    "side": "top",    "offset": 1100, "width": 700 },
+    { "room": "tualet",     "side": "top",    "offset": 300,  "width": 600 },
+    { "room": "kuhnya",     "side": "top",    "offset": 500,  "width": 800, "toBalcony": true }
+  ],
+  "windows": [
+    { "room": "detskaya", "side": "left",  "offset": 900,  "width": 1400 },
+    { "room": "detskaya", "side": "top",   "offset": 1300, "width": 1400 },
+    { "room": "spalnya",  "side": "top",   "offset": 1600, "width": 1400 },
+    { "room": "kuhnya",   "side": "right", "offset": 2600, "width": 1600 }
+  ]
+}
