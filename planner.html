@@ -14,6 +14,7 @@
       <button id="mode-furniture" class="active">Мебель</button>
       <button id="mode-outlets">Розетки</button>
       <label><input type="checkbox" id="layer-dims" checked> Размеры</label>
+      <label><input type="checkbox" id="layer-fixtures" checked> Электрика</label>
       <button id="zoom-in">+</button>
       <button id="zoom-out">−</button>
       <button id="zoom-fit">⤢</button>
@@ -27,6 +28,11 @@
     <aside id="palette"></aside>
     <svg id="plan" xmlns="http://www.w3.org/2000/svg"></svg>
   </main>
+  <footer style="padding: 6px 16px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border);">
+    Электрика застройщика (по чертежам, позиции приблизительные): С — свет · В — выключатель · Р — розетка ·
+    Э — плита 40А · Щ — щиток ЩК-8 · К — вода/канализация · ПС — полотенцесушитель · оранжевая полоса — радиатор.
+    ⚡ — мои добавленные розетки (режим «Розетки»).
+  </footer>
   <script type="module" src="js/planner.js"></script>
 </body>
 </html>

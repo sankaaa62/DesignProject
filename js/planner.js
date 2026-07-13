@@ -58,8 +58,40 @@ function el(name, attrs = {}, parent) {
 function render() {
   svg.innerHTML = '';
   renderRooms();
+  renderFixtures();
   renderFurniture();
   renderOutlets();
+}
+
+const FIXTURE_STYLE = {
+  light:  { color: '#ba7517', label: 'С' },
+  switch: { color: '#0f6e56', label: 'В' },
+  socket: { color: '#1d9e75', label: 'Р' },
+  power:  { color: '#a32d2d', label: 'Э' },
+  panel:  { color: '#444441', label: 'Щ' },
+  water:  { color: '#185fa5', label: 'К' },
+  towel:  { color: '#378add', label: 'ПС' }
+};
+
+function renderFixtures() {
+  const g = el('g', { id: 'g-fixtures' }, svg);
+  const box = document.getElementById('layer-fixtures');
+  if (box && !box.checked) return;
+  for (const f of apartment.fixtures ?? []) {
+    if (f.type === 'radiator') {
+      el('rect', { x: f.x, y: f.y, width: f.w, height: f.h,
+        fill: '#e8a13c', rx: 40 }, g);
+      continue;
+    }
+    const s = FIXTURE_STYLE[f.type];
+    if (!s) continue;
+    el('circle', { cx: f.x, cy: f.y, r: 130, fill: '#ffffff',
+      stroke: s.color, 'stroke-width': 40 }, g);
+    const t = el('text', { x: f.x, y: f.y + 55, 'text-anchor': 'middle',
+      'font-size': f.type === 'towel' ? 105 : 150, fill: s.color,
+      'pointer-events': 'none' }, g);
+    t.textContent = s.label;
+  }
 }
 
 const WALL = 150;
@@ -89,13 +121,20 @@ function renderRooms() {
       el('rect', { x: r.x, y: r.y, width: r.w, height: r.h, ...style }, g);
     }
     if (r.w < 1000) continue;
-    const label = el('text', { x: r.x + r.w / 2, y: r.y + r.h / 2 - 60,
-      'text-anchor': 'middle', 'font-size': 240, fill: '#6f6e69' }, g);
-    label.textContent = `${r.name} · ${r.area} м²`;
+    const name = `${r.name} · ${r.area} м²`;
+    const nameFs = Math.max(120, Math.min(240, r.w / (name.length * 0.6)));
+    const label = el('text', { x: r.x + r.w / 2, y: r.y + r.h / 2 + nameFs / 3,
+      'text-anchor': 'middle', 'font-size': nameFs, fill: '#6f6e69' }, g);
+    label.textContent = name;
     if (showDims) {
-      const dims = el('text', { x: r.x + r.w / 2, y: r.y + r.h / 2 + 220,
-        'text-anchor': 'middle', 'font-size': 180, fill: '#b0aea6' }, g);
-      dims.textContent = `${(r.w / 1000).toFixed(2)} × ${(r.h / 1000).toFixed(2)} м`;
+      const fs = 150;
+      const wTxt = el('text', { x: r.x + r.w / 2, y: r.y + fs + 90,
+        'text-anchor': 'middle', 'font-size': fs, fill: '#8a8985' }, g);
+      wTxt.textContent = (r.w / 1000).toFixed(2);
+      const hx = r.points ? r.x + r.w - fs - 90 : r.x + fs + 90;
+      const hTxt = el('text', { 'text-anchor': 'middle', 'font-size': fs, fill: '#8a8985',
+        transform: `translate(${hx}, ${r.y + r.h / 2}) rotate(-90)` }, g);
+      hTxt.textContent = (r.h / 1000).toFixed(2);
     }
   }
   for (const d of apartment.doors ?? []) renderOpening(d, '#d85a30', g);
@@ -264,6 +303,7 @@ document.getElementById('zoom-in').addEventListener('click', () => zoom(0.8));
 document.getElementById('zoom-out').addEventListener('click', () => zoom(1.25));
 document.getElementById('zoom-fit').addEventListener('click', fitView);
 document.getElementById('layer-dims').addEventListener('change', render);
+document.getElementById('layer-fixtures').addEventListener('change', render);
 
 document.addEventListener('keydown', evt => {
   if (evt.target.tagName === 'INPUT') return;
