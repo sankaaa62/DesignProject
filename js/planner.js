@@ -69,6 +69,7 @@ function renderRooms() {
     el('rect', { x: r.x, y: r.y, width: r.w, height: r.h,
       fill: r.cold ? '#f0efec' : '#ffffff', stroke: '#5f5e5a', 'stroke-width': 60,
       'stroke-dasharray': r.cold ? '120 80' : 'none' }, g);
+    if (r.w < 1000) continue;
     const label = el('text', { x: r.x + r.w / 2, y: r.y + r.h / 2 - 60,
       'text-anchor': 'middle', 'font-size': 240, fill: '#6f6e69' }, g);
     label.textContent = `${r.name} · ${r.area} м²`;
