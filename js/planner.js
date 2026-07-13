@@ -145,7 +145,7 @@ function renderOpening(o, color, g) {
   const r = apartment.rooms.find(rm => rm.id === o.room);
   if (!r) return;
   let x, y, w, h;
-  const t = WALL;
+  const t = 90;
   if (o.side === 'top')    { x = r.x + o.offset; y = r.y - t;       w = o.width; h = t * 2; }
   if (o.side === 'bottom') { x = r.x + o.offset; y = r.y + r.h - t; w = o.width; h = t * 2; }
   if (o.side === 'left')   { x = r.x - t;        y = r.y + o.offset; w = t * 2;  h = o.width; }
