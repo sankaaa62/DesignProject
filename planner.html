@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Планировщик — Воткинское 53к1</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header>
+    <a href="index.html">← Штаб</a>
+    <h1>Планировщик</h1>
+    <div class="toolbar">
+      <button id="mode-furniture" class="active">Мебель</button>
+      <button id="mode-outlets">Розетки</button>
+      <label><input type="checkbox" id="layer-dims" checked> Размеры</label>
+      <button id="zoom-in">+</button>
+      <button id="zoom-out">−</button>
+      <button id="zoom-fit">⤢</button>
+      <button id="btn-rotate" disabled>Повернуть (R)</button>
+      <button id="btn-delete" disabled>Удалить (Del)</button>
+      <button id="btn-export">Экспорт</button>
+      <label class="btn">Импорт<input type="file" id="file-import" accept=".json" hidden></label>
+    </div>
+  </header>
+  <main class="planner-layout">
+    <aside id="palette"></aside>
+    <svg id="plan" xmlns="http://www.w3.org/2000/svg"></svg>
+  </main>
+  <script type="module" src="js/planner.js"></script>
+</body>
+</html>
