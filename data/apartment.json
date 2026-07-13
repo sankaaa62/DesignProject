@@ -19,23 +19,23 @@
   "doors": [
     { "room": "prihozhaya", "side": "bottom", "offset": 500,  "width": 900, "entry": true },
     { "room": "prihozhaya", "side": "right",  "offset": 50,   "width": 1570 },
-    { "room": "prihozhaya", "side": "top",    "offset": 50,   "width": 1150 },
+    { "room": "prihozhaya", "side": "top",    "offset": 1360, "width": 560 },
     { "room": "detskaya",   "side": "right",  "offset": 2250, "width": 800 },
     { "room": "spalnya",    "side": "bottom", "offset": 300,  "width": 800 },
     { "room": "vannaya",    "side": "top",    "offset": 1200, "width": 700 },
     { "room": "tualet",     "side": "top",    "offset": 380,  "width": 600 },
-    { "room": "kuhnya",     "side": "top",    "offset": 300,  "width": 800, "toBalcony": true }
+    { "room": "kuhnya",     "side": "top",    "offset": 1700, "width": 800, "toBalcony": true }
   ],
   "windows": [
     { "room": "detskaya", "side": "left", "offset": 900,  "width": 1400 },
     { "room": "detskaya", "side": "top",  "offset": 1300, "width": 1400 },
     { "room": "spalnya",  "side": "top",  "offset": 1600, "width": 1400 },
-    { "room": "kuhnya",   "side": "top",  "offset": 1500, "width": 1400 }
+    { "room": "kuhnya",   "side": "top",  "offset": 300,  "width": 1400 }
   ],
   "fixtures": [
     { "type": "radiator", "x": 1300,  "y": 1130, "w": 1400, "h": 120 },
     { "type": "radiator", "x": 5690,  "y": 50,   "w": 1400, "h": 120 },
-    { "type": "radiator", "x": 10390, "y": 50,   "w": 1400, "h": 120 },
+    { "type": "radiator", "x": 9290,  "y": 50,   "w": 1400, "h": 120 },
 
     { "type": "light", "x": 2005,  "y": 2200 },
     { "type": "light", "x": 6385,  "y": 1200 },
