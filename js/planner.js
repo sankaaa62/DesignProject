@@ -62,12 +62,27 @@ function render() {
   renderOutlets();
 }
 
+const WALL = 150;
+
 function renderRooms() {
   const g = el('g', { id: 'g-rooms' }, svg);
   const showDims = document.getElementById('layer-dims').checked;
   for (const r of apartment.rooms) {
-    const style = { fill: r.cold ? '#f0efec' : '#ffffff', stroke: '#5f5e5a',
-      'stroke-width': 60, 'stroke-dasharray': r.cold ? '120 80' : 'none' };
+    if (r.points) {
+      el('polygon', { points: r.points.map(p => p.join(',')).join(' '),
+        fill: '#5f5e5a', stroke: '#5f5e5a', 'stroke-width': WALL * 2 }, g);
+    } else {
+      el('rect', { x: r.x - WALL, y: r.y - WALL,
+        width: r.w + WALL * 2, height: r.h + WALL * 2, fill: '#5f5e5a' }, g);
+    }
+  }
+  for (const r of apartment.rooms) {
+    const style = { fill: r.cold ? '#f0efec' : '#ffffff' };
+    if (r.cold) {
+      style.stroke = '#8a8985';
+      style['stroke-width'] = 30;
+      style['stroke-dasharray'] = '120 80';
+    }
     if (r.points) {
       el('polygon', { points: r.points.map(p => p.join(',')).join(' '), ...style }, g);
     } else {
@@ -91,7 +106,7 @@ function renderOpening(o, color, g) {
   const r = apartment.rooms.find(rm => rm.id === o.room);
   if (!r) return;
   let x, y, w, h;
-  const t = 80;
+  const t = WALL;
   if (o.side === 'top')    { x = r.x + o.offset; y = r.y - t;       w = o.width; h = t * 2; }
   if (o.side === 'bottom') { x = r.x + o.offset; y = r.y + r.h - t; w = o.width; h = t * 2; }
   if (o.side === 'left')   { x = r.x - t;        y = r.y + o.offset; w = t * 2;  h = o.width; }

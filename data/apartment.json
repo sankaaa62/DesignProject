@@ -19,6 +19,7 @@
   "doors": [
     { "room": "prihozhaya", "side": "bottom", "offset": 500,  "width": 900, "entry": true },
     { "room": "prihozhaya", "side": "right",  "offset": 50,   "width": 1570 },
+    { "room": "prihozhaya", "side": "top",    "offset": 50,   "width": 1150 },
     { "room": "detskaya",   "side": "right",  "offset": 2250, "width": 800 },
     { "room": "spalnya",    "side": "bottom", "offset": 300,  "width": 800 },
     { "room": "vannaya",    "side": "top",    "offset": 1200, "width": 700 },
