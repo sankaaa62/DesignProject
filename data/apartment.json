@@ -33,7 +33,7 @@
     { "room": "kuhnya",   "side": "top",  "offset": 750,  "width": 1600 }
   ],
   "fixtures": [
-    { "type": "radiator", "x": 1300,  "y": 1130, "w": 1400, "h": 120 },
+    { "type": "radiator", "x": 50,    "y": 2000, "w": 120,  "h": 1400 },
     { "type": "radiator", "x": 5690,  "y": 50,   "w": 1400, "h": 120 },
     { "type": "radiator", "x": 9700,  "y": 50,   "w": 1400, "h": 120 },
 
