@@ -2,7 +2,7 @@
 
 Инструменты планирования ремонта: интерактивный планировщик, смета, план работ.
 
-**Сайт:** https://sankaaa62.github.io/DesignProject/ (после включения GitHub Pages)
+**Сайт:** https://sankaaa62.github.io/DesignProject/
 
 - `planner.html` — планировщик квартиры (мебель, розетки, экспорт layout.json)
 - `data/` — геометрия квартиры и данные
