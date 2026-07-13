@@ -94,7 +94,7 @@ function renderFixtures() {
   }
 }
 
-const WALL = 150;
+const WALL = 280;
 
 function renderRooms() {
   const g = el('g', { id: 'g-rooms' }, svg);
