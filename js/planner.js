@@ -128,3 +128,157 @@ function renderOutlets() {
     t.textContent = '⚡';
   }
 }
+
+// ---------- Палитра ----------
+buildPalette();
+
+function buildPalette() {
+  const aside = document.getElementById('palette');
+  aside.innerHTML = '';
+  const cats = [...new Set(CATALOG.map(c => c.cat))];
+  for (const cat of cats) {
+    const section = document.createElement('section');
+    const h = document.createElement('h3');
+    h.textContent = cat;
+    section.appendChild(h);
+    for (const item of CATALOG.filter(c => c.cat === cat)) {
+      const b = document.createElement('button');
+      b.textContent = item.name;
+      b.addEventListener('click', () => {
+        const cx = snap(view.x + view.w / 2), cy = snap(view.y + view.h / 2);
+        layout = M.addItem(layout, item.id, cx, cy);
+        selectedId = layout.items.at(-1).id;
+        persist(); render(); updateToolbar();
+      });
+      section.appendChild(b);
+    }
+    aside.appendChild(section);
+  }
+}
+
+// ---------- Координаты указателя в мм ----------
+function svgPoint(evt) {
+  const pt = new DOMPoint(evt.clientX, evt.clientY);
+  const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+  return { x: p.x, y: p.y };
+}
+
+// ---------- Выбор, drag, pan ----------
+let drag = null; // { id, dx, dy } | { pan: true, startX, startY, viewX, viewY }
+
+svg.addEventListener('pointerdown', evt => {
+  const grp = evt.target.closest('g[data-id]');
+  const p = svgPoint(evt);
+  if (mode === 'outlets' && !grp) {
+    layout = M.addOutlet(layout, snap(p.x), snap(p.y));
+    selectedId = layout.outlets.at(-1).id;
+    persist(); render(); updateToolbar();
+    return;
+  }
+  if (grp) {
+    selectedId = grp.dataset.id;
+    const item = layout.items.find(i => i.id === selectedId);
+    drag = item
+      ? { id: selectedId, dx: p.x - item.x, dy: p.y - item.y }
+      : { id: selectedId, outlet: true };
+    svg.setPointerCapture(evt.pointerId);
+  } else {
+    selectedId = null;
+    drag = { pan: true, startX: evt.clientX, startY: evt.clientY,
+      viewX: view.x, viewY: view.y };
+    svg.setPointerCapture(evt.pointerId);
+  }
+  render(); updateToolbar();
+});
+
+svg.addEventListener('pointermove', evt => {
+  if (!drag) return;
+  if (drag.pan) {
+    const scale = view.w / svg.clientWidth;
+    view.x = drag.viewX - (evt.clientX - drag.startX) * scale;
+    view.y = drag.viewY - (evt.clientY - drag.startY) * scale;
+    applyView();
+    return;
+  }
+  const p = svgPoint(evt);
+  if (drag.outlet) {
+    layout = { ...layout, outlets: layout.outlets.map(o =>
+      o.id === drag.id ? { ...o, x: snap(p.x), y: snap(p.y) } : o) };
+  } else {
+    layout = M.moveItem(layout, drag.id, snap(p.x - drag.dx), snap(p.y - drag.dy));
+  }
+  render();
+});
+
+svg.addEventListener('pointerup', () => {
+  if (drag && !drag.pan) persist();
+  drag = null;
+});
+
+// ---------- Тулбар ----------
+function updateToolbar() {
+  const isItem = layout.items.some(i => i.id === selectedId);
+  const isOutlet = layout.outlets.some(o => o.id === selectedId);
+  document.getElementById('btn-rotate').disabled = !isItem;
+  document.getElementById('btn-delete').disabled = !isItem && !isOutlet;
+}
+
+function deleteSelected() {
+  if (!selectedId) return;
+  layout = layout.items.some(i => i.id === selectedId)
+    ? M.removeItem(layout, selectedId)
+    : M.removeOutlet(layout, selectedId);
+  selectedId = null;
+  persist(); render(); updateToolbar();
+}
+
+function rotateSelected() {
+  if (!layout.items.some(i => i.id === selectedId)) return;
+  layout = M.rotateItem(layout, selectedId);
+  persist(); render();
+}
+
+document.getElementById('btn-rotate').addEventListener('click', rotateSelected);
+document.getElementById('btn-delete').addEventListener('click', deleteSelected);
+document.getElementById('zoom-in').addEventListener('click', () => zoom(0.8));
+document.getElementById('zoom-out').addEventListener('click', () => zoom(1.25));
+document.getElementById('zoom-fit').addEventListener('click', fitView);
+document.getElementById('layer-dims').addEventListener('change', render);
+
+document.addEventListener('keydown', evt => {
+  if (evt.target.tagName === 'INPUT') return;
+  if (evt.key === 'r' || evt.key === 'R' || evt.key === 'к' || evt.key === 'К') rotateSelected();
+  if (evt.key === 'Delete' || evt.key === 'Backspace') deleteSelected();
+});
+
+// ---------- Режимы ----------
+for (const m of ['furniture', 'outlets']) {
+  document.getElementById('mode-' + m).addEventListener('click', () => {
+    mode = m;
+    document.getElementById('mode-furniture').classList.toggle('active', m === 'furniture');
+    document.getElementById('mode-outlets').classList.toggle('active', m === 'outlets');
+  });
+}
+
+// ---------- Экспорт / импорт ----------
+document.getElementById('btn-export').addEventListener('click', () => {
+  const blob = new Blob([M.serialize(layout)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'layout.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById('file-import').addEventListener('change', async evt => {
+  const file = evt.target.files[0];
+  if (!file) return;
+  try {
+    layout = M.parse(await file.text());
+    selectedId = null;
+    persist(); render(); updateToolbar();
+  } catch (e) {
+    alert('Не удалось импортировать: ' + e.message);
+  }
+  evt.target.value = '';
+});
