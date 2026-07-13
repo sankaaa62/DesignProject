@@ -66,9 +66,13 @@ function renderRooms() {
   const g = el('g', { id: 'g-rooms' }, svg);
   const showDims = document.getElementById('layer-dims').checked;
   for (const r of apartment.rooms) {
-    el('rect', { x: r.x, y: r.y, width: r.w, height: r.h,
-      fill: r.cold ? '#f0efec' : '#ffffff', stroke: '#5f5e5a', 'stroke-width': 60,
-      'stroke-dasharray': r.cold ? '120 80' : 'none' }, g);
+    const style = { fill: r.cold ? '#f0efec' : '#ffffff', stroke: '#5f5e5a',
+      'stroke-width': 60, 'stroke-dasharray': r.cold ? '120 80' : 'none' };
+    if (r.points) {
+      el('polygon', { points: r.points.map(p => p.join(',')).join(' '), ...style }, g);
+    } else {
+      el('rect', { x: r.x, y: r.y, width: r.w, height: r.h, ...style }, g);
+    }
     if (r.w < 1000) continue;
     const label = el('text', { x: r.x + r.w / 2, y: r.y + r.h / 2 - 60,
       'text-anchor': 'middle', 'font-size': 240, fill: '#6f6e69' }, g);
